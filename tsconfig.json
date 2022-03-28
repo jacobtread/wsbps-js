@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "ES2015",
+    "moduleResolution": "node",
+    "useDefineForClassFields": true,
+    "downlevelIteration": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "removeComments": true,
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "outDir": "dist"
+  },
+  "include": [
+    "src/**.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
