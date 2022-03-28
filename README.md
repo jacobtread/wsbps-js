@@ -82,12 +82,12 @@ used in the third argument which defines the order in which the fields should be
 ```typescript
 // gowsps exports custom data types you must use these
 // data types when defining your packet
-import { UInt8, Str, PacketDefinition } from "wbsps-js";
+import { u8, Str, PacketDefinition } from "wbsps-js";
 
 // Create a new packet definition
 const TestPacket = new PacketDefinition(0x02 /* this is the id of the packet */, {
     name: Str, // This is a string field
-    user: UInt8 // This is a uint8 field
+    user: u8 // This is a uint8 field
 }, ['name', 'user'] /* This is the order of the fields */)
 
 ```
@@ -175,11 +175,11 @@ structs you can define them using the following
 #### Simple struct
 
 ```typescript
-import { Str, Struct, UInt8 } from "gowsps-js";
+import { Str, Struct, u8 } from "gowsps-js";
 
 const MyStruct = Struct({
     name: Str,
-    value: UInt8
+    value: u8
 }, ['name', 'value'])
 ```
 
@@ -189,11 +189,11 @@ You can create arrays of a new struct type using the `StructArray` function. The
 MyStruct[]
 
 ```typescript
-import { Str, StructVec, UInt8 } from "gowsps-js";
+import { Str, StructVec, u8 } from "gowsps-js";
 
 const MyStruct = StructVec({
     name: Str,
-    value: UInt8
+    value: u8
 }, ['name', 'value'])
 ```
 
@@ -201,13 +201,13 @@ Or you can create an array of an existing type with the `ArrayType` function. In
 will be equivalent to string[]. This will work with any data type including user created structs
 
 ```typescript
-import { Str, ArrayType, UInt8 } from "gowsps-js";
+import { Str, Vec, u8 } from "gowsps-js";
 
 
 const TestPacket = new PacketDefinition(0x02, {
     name: Str,
-    user: UInt8,
-    values: ArrayType(Str)
+    user: u8,
+    values: Vec(Str)
 }, ['name', 'user', 'values'])
 ```
 
@@ -217,10 +217,10 @@ If you would like to create a map of key -> value pairs of which the keys are no
 the `MapType` DataType generator function
 
 ```typescript
-import { Str, MapType, UInt32 } from "gowsps-js";
+import { Str, MapType, u32 } from "gowsps-js";
 
 const ScoresPacket = new PacketDefinition(0x09, {
-    scores: MapType(Str, UInt32)
+    scores: MapType(Str, u32)
 }, ['scores'])
 ```
 

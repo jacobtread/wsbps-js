@@ -1,9 +1,9 @@
 {
-  "name": "gowsps-js",
+  "name": "wsbps-js",
   "private": false,
-  "version": "1.1.1",
+  "version": "1.0.1",
   "author": "Jacobtread",
-  "description": "A javascript client for GoWSPS",
+  "description": "A javascript client for websocket binary packet system",
   "repository": "https://github.com/jacobtread/gowsps-js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
