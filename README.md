@@ -32,7 +32,7 @@ The following code is an example for creating a new `BinarySocket` which is a wr
 allows the handling of GoWSPS binary packets
 
 ```typescript
-import { BinarySocket } from "gowsps-js";
+import { BinarySocket } from "wsbps-js";
 
 const socket = new BinarySocket(SOCKET_URL)
 
@@ -42,15 +42,15 @@ Optionally you can supply a config with a reconnect timeout if you specify this 
 reconnect after being disconnected for the provided amount of time
 
 ```typescript
-import { BinarySocket } from "gowsps-js";
+import { BinarySocket } from "wsbps-js";
 
 const socket = new BinarySocket(SOCKET_URL, {
     reconnectTimeout: 1000 // The time in milliseconds
 })
 ```
 
-After creating a socket you must wait for the socket to become open before you can send any packets
-the `addListener` function with a function as the first argument
+After creating a socket you must wait for the socket to become open before you can send any packets the `addListener`
+function with a function as the first argument
 
 ```typescript
 // ...
@@ -60,12 +60,12 @@ socket.addEventListener('open', () => {
 ```
 
 > The available events are 'open' and 'close' if a reconnect timeout
-> is specified in the config the 'close' event will be invoked before 
+> is specified in the config the 'close' event will be invoked before
 > reconnecting.
 
-you can remove listeners using the `removeEventListener` function. Providing
-it a function as the second argument will only remove that event listener function
-but providing no second argument will remove all event listeners for that event.
+you can remove listeners using the `removeEventListener` function. Providing it a function as the second argument will
+only remove that event listener function but providing no second argument will remove all event listeners for that
+event.
 
 ```typescript
 socket.removeEventListener('open')
@@ -82,7 +82,7 @@ used in the third argument which defines the order in which the fields should be
 ```typescript
 // gowsps exports custom data types you must use these
 // data types when defining your packet
-import { UInt8, Str, PacketDefinition } from "gowsps-js";
+import { UInt8, Str, PacketDefinition } from "wbsps-js";
 
 // Create a new packet definition
 const TestPacket = new PacketDefinition(0x02 /* this is the id of the packet */, {
@@ -108,7 +108,7 @@ socket.definePacket(TestPacket)
 
 ## Sending a packet
 
-The following code shows how to create a send a packet. You must provide the 
+The following code shows how to create and send a packet. You must provide the
 
 ```typescript
 // ...
@@ -119,9 +119,10 @@ socket.send(TestPacket, {
 ```
 
 ### Create a packet without sending
-If you want to create a packet ahead of time without actually sending it to the
-server, yet you can use the `socket.createBuffer` function to create an ArrayBuffer 
-that contains the packet contents which you can later send using `socket.sendBuffer`
+
+If you want to create a packet ahead of time without actually sending it to the server, yet you can use
+the `socket.createBuffer` function to create an ArrayBuffer that contains the packet contents which you can later send
+using `socket.sendBuffer`
 
 ```typescript
 const buffer = socket.createBuffer(TestPacket, {
@@ -150,25 +151,26 @@ socket.addListener(TestPacket, ({user, name}) => {
 The following table contains the data types that can be specified along with their types in Javascript and Go. The
 javascript contains the range of values on the number types
 
-| Data Type        | Javascript Type                    | Go Type   |
-|------------------|------------------------------------|-----------|
-| Int8             | number ( -128 to 127)              | int8      |
-| Int16            | number (-32768 to 32767)           | int16     |
-| Int32            | number (-2147483648 to 2147483647) | int32     |
-| UInt8            | number (0 to 255)                  | uint8     |
-| UInt16           | number (0 to 65535)                | uint16    |
-| UInt32           | number (0 to 4294967295)           | uint32    |
-| Float32          | number (-3.4e+38 to 3.4e+38)       | float32   |
-| Float64          | number (-1.7e+308 to +1.7e+308)    | float64   |
-| VarInt           | number (0 to 18446744073709551615) | uint64    |
-| Bool             | boolean                            | bool      |
-| Str              | string                             | string    |
-| ByteArray        | Uint8Array                         | []byte    |
+| Data Type | Javascript Type                    | Go Type | Rust Type |
+|-----------|------------------------------------|---------|-----------|
+| i8        | number ( -128 to 127)              | int8    | i8        |
+| i16       | number (-32768 to 32767)           | int16   | i16       |
+| i32       | number (-2147483648 to 2147483647) | int32   | i32       |
+| u8        | number (0 to 255)                  | uint8   | u8        |
+| u16       | number (0 to 65535)                | uint16  | u16       |
+| u32       | number (0 to 4294967295)           | uint32  | u32       |
+| f32       | number (-3.4e+38 to 3.4e+38)       | float32 | f32       |
+| f64       | number (-1.7e+308 to +1.7e+308)    | float64 | f64       |
+| VarInt    | number (0 to 4294967295)           | uint32  | VarInt    |
+| VarLong   | number (0 to 18446744073709551615) | uint64  | VarLong   |
+| Bool      | boolean                            | bool    | bool      |
+| Str       | string                             | string  | String    |
+| ByteArray | Uint8Array                         | []byte  | Vec\<u8>  |
 
 ## Special Data Types
 
-For data that doesn't conform to the average number types, and you want something like a custom struct
-or an array of structs you can define them using the following
+For data that doesn't conform to the average number types, and you want something like a custom struct or an array of
+structs you can define them using the following
 
 #### Simple struct
 
@@ -183,21 +185,20 @@ const MyStruct = Struct({
 
 #### Array of structs
 
-You can create arrays of a new struct type using the `StructArray` function.
-The following code will be equivalent to MyStruct[]
+You can create arrays of a new struct type using the `StructArray` function. The following code will be equivalent to
+MyStruct[]
 
 ```typescript
-import { Str, StructArray, UInt8 } from "gowsps-js";
+import { Str, StructVec, UInt8 } from "gowsps-js";
 
-const MyStruct = StructArray({
+const MyStruct = StructVec({
     name: Str,
     value: UInt8
 }, ['name', 'value'])
 ```
 
-Or you can create an array of an existing type with the `ArrayType` function.
-In the following code the field `values` will be equivalent to string[]. This
-will work with any data type including user created structs
+Or you can create an array of an existing type with the `ArrayType` function. In the following code the field `values`
+will be equivalent to string[]. This will work with any data type including user created structs
 
 ```typescript
 import { Str, ArrayType, UInt8 } from "gowsps-js";
@@ -212,8 +213,8 @@ const TestPacket = new PacketDefinition(0x02, {
 
 ### Map encodings
 
-If you would like to create a map of key -> value pairs of which the keys are not always
-the same you can use the `MapType` DataType generator function
+If you would like to create a map of key -> value pairs of which the keys are not always the same you can use
+the `MapType` DataType generator function
 
 ```typescript
 import { Str, MapType, UInt32 } from "gowsps-js";
@@ -225,9 +226,8 @@ const ScoresPacket = new PacketDefinition(0x09, {
 
 ### Custom encodings
 
-If you want to create a custom data type with a custom encoding you can implement
-the `DataType` interface like so. The size function is used to calculate the size
-in bytes that a piece of data will take up. 
+If you want to create a custom data type with a custom encoding you can implement the `DataType` interface like so. The
+size function is used to calculate the size in bytes that a piece of data will take up.
 
 (e.g. uint8 takes up 1 byte and uint32 takes up 4)
 
